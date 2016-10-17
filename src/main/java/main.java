@@ -21,7 +21,7 @@ public class main {
         get("/:region", (request, response) -> {
             String regionUrl = regions.fetchRegion(request.params(":region"));
             LinkedList<Feed> feedList = feedReader.getFeedElements(regionUrl);
-            response.header("Content-Type", "application/json");
+            response.header("Content-Type", "application/json charset=UTF-8\",\"*/*;charset=UTF-8");
             response.body(gson.toJson(feedList));
             response.status(200);
             return response.body();
