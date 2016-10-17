@@ -1,36 +1,30 @@
-import spark.Request;
+import com.google.gson.Gson;
+import news.Feed;
+import news.FeedReader;
+import news.Regions;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.LinkedList;
 
 import static spark.Spark.*;
 
 public class main {
 
-
     public static void main(String[] args) {
+        Gson gson = new Gson();
+        Regions regions = new Regions();
+        FeedReader feedReader = new FeedReader();
         port(8080);
+        // Get method for index page.
         get("/", (req, res) -> "Simon gillar Battlerite");
 
-    }
-
-    private static String preferredResponseType(Request request) {
-        // Ibland skickar en klient en lista av format som den önskar.
-        // Här splittar vi upp listan och tar bort eventuella mellanslag.
-        List<String> types = Arrays.asList(request.headers("Accept").split("\\s*,\\s*"));
-
-        // Gå igenom listan av format och skicka tillbaka det första som vi stöder
-        for (String type: types) {
-            switch (type) {
-                case "application/json":
-                case "application/xml":
-                case "text/html":
-                    return type;
-                default:
-            }
-        }
-
-        // Om vi inte stöder något av formaten, skicka tillbaka det första formatet
-        return types.get(0);
+        // Get method for a specific region
+        get("/:region", (request, response) -> {
+            String regionUrl = regions.fetchRegion(request.params(":region"));
+            LinkedList<Feed> feedList = feedReader.getFeedElements(regionUrl);
+            response.header("Content-Type", "application/json");
+            response.body(gson.toJson(feedList));
+            response.status(200);
+            return response.body();
+        });
     }
 }

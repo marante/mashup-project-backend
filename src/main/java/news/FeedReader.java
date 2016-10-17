@@ -6,6 +6,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.net.URL;
+import java.util.LinkedList;
 
 /**
  * Created by Victor on 2016-10-14.
@@ -13,11 +14,12 @@ import java.net.URL;
 public class FeedReader {
 
 
-    public Document getFeedElements(String url) throws Exception {
+    public LinkedList getFeedElements(String url) throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         Document doc = factory.newDocumentBuilder().parse(new URL(url).openStream());
         doc.getDocumentElement().normalize();
+        LinkedList<Feed> feedList = new LinkedList<>();
 
         NodeList nList = doc.getElementsByTagName("item");
 
@@ -28,19 +30,28 @@ public class FeedReader {
             if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element eElement  = (Element) nNode;
 
-                System.out.println("Title: " + eElement.getElementsByTagName("title").item(0).getTextContent());
-                System.out.println("Link: " + eElement.getElementsByTagName("link").item(0).getTextContent());
-                System.out.println("Description: " + eElement.getElementsByTagName("description").item(0).getTextContent());
-                System.out.println("GUID: " + eElement.getElementsByTagName("guid").item(0).getTextContent());
-                System.out.println("Permalink: " + eElement.getAttribute("isPermalink"));
-                System.out.println("Pubdate: " + eElement.getElementsByTagName("pubDate").item(0).getTextContent());
+                Feed feed = new Feed();
+
+                feed.setTitle(eElement.getElementsByTagName("title").item(0).getTextContent());
+                feed.setLink(eElement.getElementsByTagName("link").item(0).getTextContent());
+                feed.setDescription(eElement.getElementsByTagName("description").item(0).getTextContent());
+                feed.setGuid(eElement.getElementsByTagName("guid").item(0).getTextContent());
+
+                /* Needs to further tested.
+                if(eElement.getAttribute("isPermalink").equals("true")) {
+                    feed.setPermalink(true);
+                } else if (eElement.getAttribute("isPermalink").equals("false")){
+                    feed.setPermalink(false);
+                } else {
+                    System.out.println("Permalink returned neither true or false.");
+                }
+                */
+
+                feed.setPubDate(eElement.getElementsByTagName("pubDate").item(0).getTextContent());
+
+                feedList.add(feed);
             }
         }
-        return doc;
-    }
-
-    public static void main(String[] args) throws Exception {
-        FeedReader fr = new FeedReader();
-        fr.getFeedElements("https://polisen.se/Aktuellt/RSS/Lokal-RSS---Nyheter/Lokala-RSS-listor1/Nyheter-RSS---Sodermanland/?feed=rss");
+        return feedList;
     }
 }

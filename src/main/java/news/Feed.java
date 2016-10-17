@@ -59,4 +59,14 @@ public class Feed {
     public void setPubDate(String pubDate) {
         this.pubDate = pubDate;
     }
+
+    public String toString() {
+
+        return "Titel: " + getTitle() + "\n" +
+                "Link: " + getLink() + "\n" +
+                "Description: " + getDescription() + "\n" +
+                "GUID: " + getGuid() + "\n" +
+                "Pubdate: " + getPubDate() + "\n" +
+                "\n" + "------------------" + "\n";
+    }
 }
