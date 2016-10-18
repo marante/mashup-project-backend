@@ -2,6 +2,7 @@ import com.google.gson.Gson;
 import news.Feed;
 import news.FeedReader;
 import news.Regions;
+import statistics.Crime;
 import statistics.CrimeReader;
 
 import java.util.LinkedList;
@@ -16,6 +17,7 @@ public class main {
         FeedReader feedReader = new FeedReader();
         CrimeReader crimeReader = new CrimeReader();
         port(8080);
+
         // Get method for index page.
         get("/", (req, res) -> "Simon gillar Battlerite");
 
@@ -29,10 +31,11 @@ public class main {
             return response.body();
         });
 
+        // Get crimes for specific region
         get("/crime/:region", (request, response) -> {
-            //String region = crimeReader.getCrimeElements();
+            LinkedList<Crime> crimeList = crimeReader.getCrimeElements(request.params(":region"));
             response.header("Content-Type", "application/json charset=UTF-8\",\"*/*;charset=UTF-8");
-            //response.body(region);
+            response.body(gson.toJson(crimeList));
             response.status(200);
             return response.body();
         });

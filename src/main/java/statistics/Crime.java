@@ -1,11 +1,20 @@
 package statistics;
 
 /**
- * Created by kemkoi on 10/18/16.
+ * Created by Victor on 2016-10-18.
  */
 public class Crime {
-    private int region;
+
+    private String region;
     private int population;
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
 
     public int getPopulation() {
         return population;
@@ -13,14 +22,5 @@ public class Crime {
 
     public void setPopulation(int population) {
         this.population = population;
-    }
-
-    public int getRegion() {
-
-        return region;
-    }
-
-    public void setRegion(int region) {
-        this.region = region;
     }
 }
