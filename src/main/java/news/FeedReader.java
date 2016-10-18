@@ -54,4 +54,14 @@ public class FeedReader {
         }
         return feedList;
     }
+
+    public double getAmountOfEvents(String url) throws Exception {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        Document doc = factory.newDocumentBuilder().parse(new URL(url).openStream());
+        doc.getDocumentElement().normalize();
+        NodeList nList = doc.getElementsByTagName("item");
+
+        return nList.getLength();
+    }
 }

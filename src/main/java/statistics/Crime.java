@@ -6,7 +6,16 @@ package statistics;
 public class Crime {
 
     private String region;
-    private int population;
+    private String crimePerCapita;
+    private double population;
+
+    public String getCrimePerCapita() {
+        return crimePerCapita;
+    }
+
+    public void setCrimePerCapita(String crimePerCapita) {
+        this.crimePerCapita = crimePerCapita;
+    }
 
     public String getRegion() {
         return region;
@@ -16,11 +25,11 @@ public class Crime {
         this.region = region;
     }
 
-    public int getPopulation() {
+    public double getPopulation() {
         return population;
     }
 
-    public void setPopulation(int population) {
+    public void setPopulation(double population) {
         this.population = population;
     }
 }

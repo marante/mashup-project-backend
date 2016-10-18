@@ -1,9 +1,9 @@
 package statistics;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
+import news.FeedReader;
+import news.Regions;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.regex.Pattern;
 
@@ -19,11 +20,10 @@ import java.util.regex.Pattern;
  */
 public class CrimeReader {
 
-    public LinkedList<Crime> getCrimeElements(String crimesByRegion) {
+    public LinkedList<Crime> getCrimeElements(String selectedRegion) {
         URL url = null;
-        LinkedList<Crime> crimeList = new LinkedList<Crime>();
+        LinkedList<Crime> crimeList = new LinkedList();
         String responseJson = "";
-        Gson gson = new Gson();
         try {
             url = new URL("http://api.scb.se/OV0104/v1/doris/sv/ssd/START/BE/BE0101/BE0101A/BefolkningNy");
         } catch (MalformedURLException e) {
@@ -102,7 +102,6 @@ public class CrimeReader {
             os.close();
 
             int responseCode = httpConnection.getResponseCode();
-            System.out.println(responseCode);
 
             if (responseCode == httpConnection.HTTP_OK) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(httpConnection.getInputStream(), "UTF-8"));
@@ -116,17 +115,15 @@ public class CrimeReader {
                 responseJson = reponse.toString();
             }
 
+
             JsonObject obj = new JsonParser().parse(responseJson).getAsJsonObject();
-
-
             String[] parts;
-            int population;
+            double population;
             String region;
 
             for (int i = 0; i < 21; i++) {
                 parts = obj.getAsJsonArray("data").get(i).toString().split(Pattern.quote("\""));
-                System.out.println(parts);
-                population = Integer.parseInt(parts[9]);
+                population = Double.parseDouble(parts[9]);
                 region = parts[3];
                 Crime crime = new Crime();
                 crime.setPopulation(population);
@@ -135,148 +132,108 @@ public class CrimeReader {
                 // One region works, if you add "crimeList.add(crime);" to the case".
                 switch (region) {
                     case "01":
-                        if(crimesByRegion.equals("Stockholm")) {
-                            crime.setRegion("Stockholm");
-                            crimeList.add(crime);
-                            break;
-                        }
+                        calculateCrimePerCapita(selectedRegion, "stockholm", population, crime);
+                        crime.setRegion("stockholm");
                         break;
 
                     case "03":
-                        if(crimesByRegion.equals("Uppsala")) {
-                            crime.setRegion("Uppsala");
-                            break;
-                        }
+                        calculateCrimePerCapita(selectedRegion, "uppsala", population, crime);
+                        crime.setRegion("uppsala");
                         break;
 
                     case "04":
-                        if(crimesByRegion.equals("Södermanland")) {
-                            crime.setRegion("Södermanland");
-                            break;
-                        }
+                        calculateCrimePerCapita(selectedRegion, "sodermanland", population, crime);
+                        crime.setRegion("sodermanland");
                         break;
 
                     case "05":
-                        if(crimesByRegion.equals("Östergötland")) {
-                            crime.setRegion("Östergötland");
-                            break;
-                        }
+                        calculateCrimePerCapita(selectedRegion, "ostergotland", population, crime);
+                        crime.setRegion("ostergotland");
                         break;
 
                     case "06":
-                        if(crimesByRegion.equals("Jönköping")) {
-                            crime.setRegion("Jönköping");
-                            break;
-                        }
+                        calculateCrimePerCapita(selectedRegion, "jonkoping", population, crime);
+                        crime.setRegion("jonkoping");
                         break;
 
                     case "07":
-                        if(crimesByRegion.equals("Kronoberg")) {
-                            crime.setRegion("Kronoberg");
-                            break;
-                        }
+                        calculateCrimePerCapita(selectedRegion, "kronoberg", population, crime);
+                        crime.setRegion("kronoberg");
                         break;
 
                     case "08":
-                        if(crimesByRegion.equals("Kalmar")) {
-                            crime.setRegion("Kalmar");
-                            break;
-                        }
+                        calculateCrimePerCapita(selectedRegion, "kalmar", population, crime);
+                        crime.setRegion("kalmar");
                         break;
+
                     case "09":
-                        if(crimesByRegion.equals("Gotland")) {
-                            crime.setRegion("Gotland");
-                            break;
-                        }
+                        calculateCrimePerCapita(selectedRegion, "gotland", population, crime);
+                        crime.setRegion("gotland");
                         break;
 
                     case "10":
-                        if(crimesByRegion.equals("Blekinge")) {
-                            crime.setRegion("Blekinge");
-                            break;
-                        }
+                        calculateCrimePerCapita(selectedRegion, "blekinge", population, crime);
+                        crime.setRegion("blekinge");
                         break;
 
                     case "12":
-                        if(crimesByRegion.equals("Skåne")) {
-                            crime.setRegion("Skåne");
-                            break;
-                        }
+                        calculateCrimePerCapita(selectedRegion, "skane", population, crime);
+                        crime.setRegion("skane");
                         break;
 
                     case "13":
-                        if(crimesByRegion.equals("Halland")) {
-                            crime.setRegion("Halland");
-                            break;
-                        }
+                        calculateCrimePerCapita(selectedRegion, "halland", population, crime);
+                        crime.setRegion("halland");
                         break;
 
                     case "14":
-                        if(crimesByRegion.equals("Västra Götaland")) {
-                            crime.setRegion("Västra Götaland");
-                            break;
-                        }
+                        calculateCrimePerCapita(selectedRegion, "vastra gotaland", population, crime);
+                        crime.setRegion("vastra gotaland");
                         break;
 
                     case "17":
-                        if(crimesByRegion.equals("Värmland")) {
-                            crime.setRegion("Värmland");
-                            break;
-                        }
+                        calculateCrimePerCapita(selectedRegion, "varmland", population, crime);
+                        crime.setRegion("varmland");
                         break;
 
                     case "18":
-                        if(crimesByRegion.equals("Örebro")) {
-                            crime.setRegion("Örebro");
-                            break;
-                        }
+                        calculateCrimePerCapita(selectedRegion, "orebro", population, crime);
+                        crime.setRegion("orebro");
                         break;
 
                     case "19":
-                        if(crimesByRegion.equals("Västmanland")) {
-                            crime.setRegion("Västmanland");
-                            break;
-                        }
+                        calculateCrimePerCapita(selectedRegion, "vastmanland", population, crime);
+                        crime.setRegion("vastmanland");
                         break;
 
                     case "20":
-                        if(crimesByRegion.equals("Dalarna")) {
-                            crime.setRegion("Dalarna");
-                            break;
-                        }
+                        calculateCrimePerCapita(selectedRegion, "dalarna", population, crime);
+                        crime.setRegion("dalarna");
                         break;
 
                     case "21":
-                        if(crimesByRegion.equals("Gävleborg")) {
-                            crime.setRegion("Gävleborg");
-                            break;
-                        }
+                        calculateCrimePerCapita(selectedRegion, "gavleborg", population, crime);
+                        crime.setRegion("gavleborg");
                         break;
 
                     case "22":
-                        if(crimesByRegion.equals("Västernorrland")) {
-                            crime.setRegion("Västernorrland");
-                            break;
-                        }
+                        calculateCrimePerCapita(selectedRegion, "vasternorrland", population, crime);
+                        crime.setRegion("vasternorrland");
                         break;
 
                     case "23":
-                        if(crimesByRegion.equals("Jämtland")) {
-                            crime.setRegion("Jämtland");
-                            break;
-                        }
+                        calculateCrimePerCapita(selectedRegion, "jamtland", population, crime);
+                        crime.setRegion("jamtland");
+                        break;
+
                     case "24":
-                        if(crimesByRegion.equals("Västerbotten")) {
-                            crime.setRegion("Västerbotten");
-                            break;
-                        }
+                        calculateCrimePerCapita(selectedRegion, "vasterbotten", population, crime);
+                        crime.setRegion("vasterbotten");
                         break;
 
                     case "25":
-                        if(crimesByRegion.equals("Norrbotten")) {
-                            crime.setRegion("Norrbotten");
-                            break;
-                        }
+                        calculateCrimePerCapita(selectedRegion, "norrbotten", population, crime);
+                        crime.setRegion("norrbotten");
                         break;
 
                 }
@@ -284,11 +241,38 @@ public class CrimeReader {
             }
 
 
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
         return crimeList;
+    }
+
+
+    public Crime getCrimeByRegion(LinkedList<Crime> crimeList, String region) {
+
+
+        for (int i = 0; i < crimeList.size(); i++) {
+            if (crimeList.get(i).getRegion().equals(region)) {
+                return crimeList.get(i);
+            }
+        }
+
+        return null;
+    }
+
+    private void calculateCrimePerCapita(String selectedRegion, String region, double population, Crime crime) {
+        if(selectedRegion.equals(region)) {
+            FeedReader feedReader = new FeedReader();
+            Regions regions = new Regions();
+            try {
+                String regionUrl = regions.fetchRegion(selectedRegion);
+                double amountOfEvents = feedReader.getAmountOfEvents(regionUrl);
+                DecimalFormat df = new DecimalFormat("#.#####");
+                double crimePerCapita =  (amountOfEvents /  population) * 100;
+                crime.setCrimePerCapita(df.format(crimePerCapita));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

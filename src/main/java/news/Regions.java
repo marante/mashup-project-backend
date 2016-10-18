@@ -1,8 +1,6 @@
 package news;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Victor on 2016-10-14.

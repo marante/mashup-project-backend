@@ -32,12 +32,22 @@ public class main {
         });
 
         // Get crimes for specific region
-        get("/crime/:region", (request, response) -> {
+        get("/brott/:region", (request, response) -> {
             LinkedList<Crime> crimeList = crimeReader.getCrimeElements(request.params(":region"));
-            response.header("Content-Type", "application/json charset=UTF-8\",\"*/*;charset=UTF-8");
-            response.body(gson.toJson(crimeList));
-            response.status(200);
-            return response.body();
+            if(request.params(":region").equals("hela-sverige")) {
+                response.header("Content-Type", "application/json charset=UTF-8\",\"*/*;charset=UTF-8");
+                response.body(gson.toJson(crimeList));
+                response.status(200);
+                return response.body();
+
+            }  else {
+                Crime crime = new Crime();
+                crime = crimeReader.getCrimeByRegion(crimeList, request.params(":region"));
+                response.header("Content-Type", "application/json charset=UTF-8\",\"*/*;charset=UTF-8");
+                response.body(gson.toJson(crime));
+                response.status(200);
+                return response.body();
+            }
         });
     }
 }
