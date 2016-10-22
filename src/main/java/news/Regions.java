@@ -11,7 +11,7 @@ public class Regions {
 
     public Regions() {
 
-        regionMap.put("hela landet", "https://polisen.se/Aktuellt/Handelser/Handelser-i-hela-landet/?feed=rss");
+        regionMap.put("hela-sverige", "https://polisen.se/Aktuellt/Handelser/Handelser-i-hela-landet/?feed=rss");
         regionMap.put("blekinge", "https://polisen.se/Aktuellt/RSS/Lokal-RSS---Handelser/Lokala-RSS-listor1/Handelser-RSS---Blekinge/?feed=rss");
         regionMap.put("dalarna", "https://polisen.se/Aktuellt/RSS/Lokal-RSS---Handelser/Lokala-RSS-listor1/Handelser-RSS---Dalarna/?feed=rss");
         regionMap.put("gotland", "https://polisen.se/Aktuellt/RSS/Lokal-RSS---Handelser/Lokala-RSS-listor1/Handelser-RSS---Gotland/?feed=rss");

@@ -19,7 +19,7 @@ public class main {
         port(8080);
 
         // Get method for index page.
-        get("/", (req, res) -> "Simon gillar Battlerite");
+        get("/", (req, res) -> "Kemal gillar män");
 
         // Get method for a specific region
         get("/feed/:region", (request, response) -> {
