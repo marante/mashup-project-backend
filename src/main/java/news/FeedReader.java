@@ -22,6 +22,7 @@ public class FeedReader {
         LinkedList<Feed> feedList = new LinkedList<>();
 
         NodeList nList = doc.getElementsByTagName("item");
+        Feed feed = new Feed();
 
         for (int i = 0; i < nList.getLength(); i++) {
 
@@ -30,23 +31,10 @@ public class FeedReader {
             if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element eElement  = (Element) nNode;
 
-                Feed feed = new Feed();
-
                 feed.setTitle(eElement.getElementsByTagName("title").item(0).getTextContent());
                 feed.setLink(eElement.getElementsByTagName("link").item(0).getTextContent());
                 feed.setDescription(eElement.getElementsByTagName("description").item(0).getTextContent());
                 feed.setGuid(eElement.getElementsByTagName("guid").item(0).getTextContent());
-
-                /* Needs to further tested.
-                if(eElement.getAttribute("isPermalink").equals("true")) {
-                    feed.setPermalink(true);
-                } else if (eElement.getAttribute("isPermalink").equals("false")){
-                    feed.setPermalink(false);
-                } else {
-                    System.out.println("Permalink returned neither true or false.");
-                }
-                */
-
                 feed.setPubDate(eElement.getElementsByTagName("pubDate").item(0).getTextContent());
 
                 feedList.add(feed);

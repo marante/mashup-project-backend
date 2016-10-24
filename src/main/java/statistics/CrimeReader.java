@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import news.FeedReader;
 import news.Regions;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -118,126 +119,40 @@ public class CrimeReader {
 
             JsonObject obj = new JsonParser().parse(responseJson).getAsJsonObject();
             String[] parts;
+            StatisticRegions allRegions = new StatisticRegions();
             double population;
+            String crimePerCapita;
             String region;
+            Crime crime;
+            FeedReader feedReader = new FeedReader();
+            Regions regions = new Regions();
 
             for (int i = 0; i < 21; i++) {
+
                 parts = obj.getAsJsonArray("data").get(i).toString().split(Pattern.quote("\""));
-                population = Double.parseDouble(parts[9]);
                 region = parts[3];
-                Crime crime = new Crime();
-                crime.setPopulation(population);
 
-                // Need to create method for showing all regions at same time.
-                // One region works, if you add "crimeList.add(crime);" to the case".
-                switch (region) {
-                    case "01":
-                        calculateCrimePerCapita(selectedRegion, "stockholm", population, crime);
-                        crime.setRegion("stockholm");
-                        break;
-
-                    case "03":
-                        calculateCrimePerCapita(selectedRegion, "uppsala", population, crime);
-                        crime.setRegion("uppsala");
-                        break;
-
-                    case "04":
-                        calculateCrimePerCapita(selectedRegion, "sodermanland", population, crime);
-                        crime.setRegion("sodermanland");
-                        break;
-
-                    case "05":
-                        calculateCrimePerCapita(selectedRegion, "ostergotland", population, crime);
-                        crime.setRegion("ostergotland");
-                        break;
-
-                    case "06":
-                        calculateCrimePerCapita(selectedRegion, "jonkoping", population, crime);
-                        crime.setRegion("jonkoping");
-                        break;
-
-                    case "07":
-                        calculateCrimePerCapita(selectedRegion, "kronoberg", population, crime);
-                        crime.setRegion("kronoberg");
-                        break;
-
-                    case "08":
-                        calculateCrimePerCapita(selectedRegion, "kalmar", population, crime);
-                        crime.setRegion("kalmar");
-                        break;
-
-                    case "09":
-                        calculateCrimePerCapita(selectedRegion, "gotland", population, crime);
-                        crime.setRegion("gotland");
-                        break;
-
-                    case "10":
-                        calculateCrimePerCapita(selectedRegion, "blekinge", population, crime);
-                        crime.setRegion("blekinge");
-                        break;
-
-                    case "12":
-                        calculateCrimePerCapita(selectedRegion, "skane", population, crime);
-                        crime.setRegion("skane");
-                        break;
-
-                    case "13":
-                        calculateCrimePerCapita(selectedRegion, "halland", population, crime);
-                        crime.setRegion("halland");
-                        break;
-
-                    case "14":
-                        calculateCrimePerCapita(selectedRegion, "vastra gotaland", population, crime);
-                        crime.setRegion("vastra gotaland");
-                        break;
-
-                    case "17":
-                        calculateCrimePerCapita(selectedRegion, "varmland", population, crime);
-                        crime.setRegion("varmland");
-                        break;
-
-                    case "18":
-                        calculateCrimePerCapita(selectedRegion, "orebro", population, crime);
-                        crime.setRegion("orebro");
-                        break;
-
-                    case "19":
-                        calculateCrimePerCapita(selectedRegion, "vastmanland", population, crime);
-                        crime.setRegion("vastmanland");
-                        break;
-
-                    case "20":
-                        calculateCrimePerCapita(selectedRegion, "dalarna", population, crime);
-                        crime.setRegion("dalarna");
-                        break;
-
-                    case "21":
-                        calculateCrimePerCapita(selectedRegion, "gavleborg", population, crime);
-                        crime.setRegion("gavleborg");
-                        break;
-
-                    case "22":
-                        calculateCrimePerCapita(selectedRegion, "vasternorrland", population, crime);
-                        crime.setRegion("vasternorrland");
-                        break;
-
-                    case "23":
-                        calculateCrimePerCapita(selectedRegion, "jamtland", population, crime);
-                        crime.setRegion("jamtland");
-                        break;
-
-                    case "24":
-                        calculateCrimePerCapita(selectedRegion, "vasterbotten", population, crime);
-                        crime.setRegion("vasterbotten");
-                        break;
-
-                    case "25":
-                        calculateCrimePerCapita(selectedRegion, "norrbotten", population, crime);
-                        crime.setRegion("norrbotten");
-                        break;
-
+                if (selectedRegion.equals("hela-sverige")) {
+                    crime = new Crime();
+                    population = Double.parseDouble(parts[9]);
+                    region = allRegions.fetchRegion(region);
+                    crimePerCapita = getCrimePerCapita(selectedRegion, population, regions, feedReader);
+                    crime.setPopulation(population);
+                    crime.setRegion(region);
+                    crime.setCrimePerCapita(crimePerCapita);
+                    crimeList.add(crime);
+                } else {
+                    if (allRegions.fetchRegion(region).equals(selectedRegion)) {
+                        crime = new Crime();
+                        population = Double.parseDouble(parts[9]);
+                        region = selectedRegion;
+                        crimePerCapita = getCrimePerCapita(selectedRegion, population, regions, feedReader);
+                        crime.setPopulation(population);
+                        crime.setRegion(region);
+                        crime.setCrimePerCapita(crimePerCapita);
+                        crimeList.add(crime);
+                    }
                 }
-                crimeList.add(crime);
             }
 
 
@@ -247,32 +162,20 @@ public class CrimeReader {
         return crimeList;
     }
 
+    private String getCrimePerCapita(String selectedRegion, double population, Regions regions, FeedReader feedReader) {
 
-    public Crime getCrimeByRegion(LinkedList<Crime> crimeList, String region) {
+        double amountOfEvents;
+        String crimePerCapita = "";
 
-
-        for (int i = 0; i < crimeList.size(); i++) {
-            if (crimeList.get(i).getRegion().equals(region)) {
-                return crimeList.get(i);
-            }
+        try {
+            String regionUrl = regions.fetchRegion(selectedRegion);
+            amountOfEvents = feedReader.getAmountOfEvents(regionUrl);
+            DecimalFormat df = new DecimalFormat("#.#####");
+            crimePerCapita = df.format((amountOfEvents / population) * 100);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        return null;
-    }
-
-    private void calculateCrimePerCapita(String selectedRegion, String region, double population, Crime crime) {
-        if(selectedRegion.equals(region)) {
-            FeedReader feedReader = new FeedReader();
-            Regions regions = new Regions();
-            try {
-                String regionUrl = regions.fetchRegion(selectedRegion);
-                double amountOfEvents = feedReader.getAmountOfEvents(regionUrl);
-                DecimalFormat df = new DecimalFormat("#.#####");
-                double crimePerCapita =  (amountOfEvents /  population) * 100;
-                crime.setCrimePerCapita(df.format(crimePerCapita));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        return crimePerCapita;
     }
 }

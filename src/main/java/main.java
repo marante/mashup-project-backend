@@ -34,20 +34,10 @@ public class main {
         // Get crimes for specific region
         get("/brott/:region", (request, response) -> {
             LinkedList<Crime> crimeList = crimeReader.getCrimeElements(request.params(":region"));
-            if(request.params(":region").equals("hela-sverige")) {
-                response.header("Content-Type", "application/json charset=UTF-8\",\"*/*;charset=UTF-8");
-                response.body(gson.toJson(crimeList));
-                response.status(200);
-                return response.body();
-
-            }  else {
-                Crime crime = new Crime();
-                crime = crimeReader.getCrimeByRegion(crimeList, request.params(":region"));
-                response.header("Content-Type", "application/json charset=UTF-8\",\"*/*;charset=UTF-8");
-                response.body(gson.toJson(crime));
-                response.status(200);
-                return response.body();
-            }
+            response.header("Content-Type", "application/json charset=UTF-8\",\"*/*;charset=UTF-8");
+            response.body(gson.toJson(crimeList));
+            response.status(200);
+            return response.body();
         });
     }
 }
