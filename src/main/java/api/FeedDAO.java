@@ -35,21 +35,23 @@ public class FeedDAO implements Runnable {
 
     @Override
     public void run() {
-        try {
-            //Reset the hash map and give it the new values.
-            resetHashMaps();
-            getFeedElements();
-            getCrimeElements();
+        while(true) {
+            try {
+                //Reset the hash map and give it the new values.
+                System.out.println("Updating values...");
+                getFeedElements();
+                getCrimeElements();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-        //Sleep for 30 minutes.
-        try {
-            Thread.sleep(180000); // 1800000 = 30 minutes
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            //Sleep for 30 minutes.
+            try {
+                Thread.sleep(60000); // 60 000 = 1 minute
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -152,6 +154,7 @@ public class FeedDAO implements Runnable {
             it.remove(); //To avoid ConcurrentModificationException - Dunno om detta är nödvändigt, lösning från stackoverflow.
         }
 
+        resetHashList();
         this.hashList = hashList;
     }
 
@@ -240,14 +243,18 @@ public class FeedDAO implements Runnable {
             e.printStackTrace();
         }
 
+        resetStatisticHashList();
         this.statisticHashList = hashList;
 
 
     }
 
-    public void resetHashMaps() {
-        this.hashList = null;
+    private void resetStatisticHashList() {
         this.statisticHashList = null;
+    }
+
+    private void resetHashList() {
+        this.hashList = null;
     }
 
     public HashMap getHashList() {
