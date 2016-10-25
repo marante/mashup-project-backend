@@ -37,4 +37,8 @@ public class StatisticRegions {
 
         return (String) regionMap.get(region);
     }
+
+    public HashMap getStatisticMap() {
+        return this.regionMap;
+    }
 }

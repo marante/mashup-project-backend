@@ -39,4 +39,8 @@ public class Regions {
 
         return (String) regionMap.get(region);
     }
+
+    public HashMap getRegionMap() {
+        return this.regionMap;
+    }
 }
