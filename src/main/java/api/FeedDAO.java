@@ -54,7 +54,7 @@ public class FeedDAO implements Runnable {
     }
 
     public void start() {
-        if(thread == null) {
+        if (thread == null) {
             thread = new Thread(this);
             thread.start();
         }
@@ -68,8 +68,8 @@ public class FeedDAO implements Runnable {
         HashMap hashList = new HashMap();
 
         Iterator it = regionMap.entrySet().iterator();
-        while(it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setNamespaceAware(true);
@@ -84,14 +84,60 @@ public class FeedDAO implements Runnable {
                 Node nNode = nList.item(n);
 
                 if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-                    Element eElement  = (Element) nNode;
+                    Element eElement = (Element) nNode;
 
+                    String title = eElement.getElementsByTagName("title").item(0).getTextContent();
+                    String parts[] = title.split(",");
+
+                    String description = eElement.getElementsByTagName("description").item(0).getTextContent();
+
+                    //Om det inte är ett brott utan endast ett meddelande till användarna angående deras RSS flöde.
+                    boolean junkFound = false;
+                    for(int i = 0; i < parts.length; i++) {
+                        if(parts[i].equals(" Övrigt") || parts[i].contains("Sammanfattning") ) {
+                            junkFound = true;
+                        }
+                    }
+
+                    if(junkFound) {
+                        continue;
+                    }
 
                     Feed feed = new Feed();
 
-                    feed.setTitle(eElement.getElementsByTagName("title").item(0).getTextContent());
+                    if (parts.length == 4) {
+                        feed.setLocation(parts[3].substring(1));
+                        feed.setCrimeType(parts[1].substring(1) + " - " + parts[2].substring(1, 2).toUpperCase() + parts[2].substring(2));
+                        feed.setCrimeDate(parts[0]);
+                    } else if(parts.length == 2) {
+                        String parts2[] = parts[0].split(" ");
+                        String crimeDate = parts2[0] + " " + parts2[1];
+                        title = "";
+                        for(int i = 2; i < parts2.length; i++) {
+                            title += parts2[i] + " ";
+                        }
+                        feed.setCrimeType(title.substring(1));
+                        feed.setLocation(parts[1].substring(1));
+                        feed.setCrimeDate(crimeDate);
+                    } else {
+                        feed.setCrimeType(parts[1].substring(1));
+                        feed.setLocation(parts[2].substring(1));
+                        feed.setCrimeDate(parts[0]);
+                    }
+
+                    if(description.contains("\n") && !description.substring(Math.max(description.length() - 4, 0)).contains("\n")) {
+                        String[] descriptionParts = description.split(".\n");
+                        try {
+                            String address = descriptionParts[0];
+                            description = descriptionParts[1];
+                            feed.setCrimeAddress(address);
+                        } catch(ArrayIndexOutOfBoundsException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
                     feed.setLink(eElement.getElementsByTagName("link").item(0).getTextContent());
-                    feed.setDescription(eElement.getElementsByTagName("description").item(0).getTextContent());
+                    feed.setDescription(description);
                     feed.setGuid(eElement.getElementsByTagName("guid").item(0).getTextContent());
                     feed.setPubDate(eElement.getElementsByTagName("pubDate").item(0).getTextContent());
 
@@ -117,87 +163,84 @@ public class FeedDAO implements Runnable {
         HashMap hashList = new HashMap();
 
 
+        URL url = null;
+        LinkedList<Crime> crimeList;
+        String responseJson = "";
+        try {
+            url = new URL("http://api.scb.se/OV0104/v1/doris/sv/ssd/START/BE/BE0101/BE0101A/BefolkningNy");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
 
+        JsonPost jsonPost = new JsonPost();
+        String jsonText = jsonPost.getJsonText();
 
+        try {
+            HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
+            httpConnection.setRequestProperty("Accept-Charset", "UTF-8");
+            httpConnection.setRequestMethod("POST");
+            httpConnection.setDoOutput(true);
+            OutputStream os = httpConnection.getOutputStream();
+            os.write(jsonText.getBytes());
+            os.flush();
+            os.close();
 
-            URL url = null;
-            LinkedList<Crime> crimeList;
-            String responseJson = "";
-            try {
-                url = new URL("http://api.scb.se/OV0104/v1/doris/sv/ssd/START/BE/BE0101/BE0101A/BefolkningNy");
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
+            int responseCode = httpConnection.getResponseCode();
+
+            if (responseCode == httpConnection.HTTP_OK) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(httpConnection.getInputStream(), "UTF-8"));
+                String input;
+                StringBuffer reponse = new StringBuffer();
+
+                while ((input = br.readLine()) != null) {
+                    reponse.append(input);
+                }
+                br.close();
+                responseJson = reponse.toString();
             }
 
-            JsonPost jsonPost = new JsonPost();
-            String jsonText = jsonPost.getJsonText();
 
-            try {
-                HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
-                httpConnection.setRequestProperty("Accept-Charset", "UTF-8");
-                httpConnection.setRequestMethod("POST");
-                httpConnection.setDoOutput(true);
-                OutputStream os = httpConnection.getOutputStream();
-                os.write(jsonText.getBytes());
-                os.flush();
-                os.close();
+            JsonObject obj = new JsonParser().parse(responseJson).getAsJsonObject();
+            String[] parts;
+            double population;
+            double crimePerCapita;
+            String formattedCPC;
+            String region;
+            Crime crime;
 
-                int responseCode = httpConnection.getResponseCode();
+            for (int i = 0; i < 21; i++) {
 
-                if (responseCode == httpConnection.HTTP_OK) {
-                    BufferedReader br = new BufferedReader(new InputStreamReader(httpConnection.getInputStream(), "UTF-8"));
-                    String input;
-                    StringBuffer reponse = new StringBuffer();
+                crimeList = new LinkedList<>();
 
-                    while ((input = br.readLine()) != null) {
-                        reponse.append(input);
-                    }
-                    br.close();
-                    responseJson = reponse.toString();
-                }
+                parts = obj.getAsJsonArray("data").get(i).toString().split(Pattern.quote("\""));
+                region = parts[3];
+                population = Double.parseDouble(parts[9]);
 
+                region = (String) statisticMap.get(region); // Get the current region.
 
-                JsonObject obj = new JsonParser().parse(responseJson).getAsJsonObject();
-                String[] parts;
-                double population;
-                double crimePerCapita;
-                String formattedCPC;
-                String region;
-                Crime crime;
+                //Add crime per capita
+                crimePerCapita = getFeedSize(region);
+                crimePerCapita = (crimePerCapita / population) * 100;
+                DecimalFormat df = new DecimalFormat("#.#####");
+                formattedCPC = df.format(crimePerCapita);
 
-                for (int i = 0; i < 21; i++) {
-
-                    crimeList = new LinkedList<>();
-
-                    parts = obj.getAsJsonArray("data").get(i).toString().split(Pattern.quote("\""));
-                    region = parts[3];
-                    population = Double.parseDouble(parts[9]);
-
-                    region = (String) statisticMap.get(region); // Get the current region.
-
-                    //Add crime per capita
-                    crimePerCapita = getFeedSize(region);
-                    crimePerCapita = (crimePerCapita / population) * 100;
-                    DecimalFormat df = new DecimalFormat("#.#####");
-                    formattedCPC = df.format(crimePerCapita);
-
-                    crime = new Crime();
-                    crime.setRegion(region);
-                    crime.setPopulation(population);
-                    crime.setCrimePerCapita(formattedCPC);
+                crime = new Crime();
+                crime.setRegion(region);
+                crime.setPopulation(population);
+                crime.setCrimePerCapita(formattedCPC);
 
 
-                    crimeList.add(crime);
-                    hashList.put(region, crimeList);
+                crimeList.add(crime);
+                hashList.put(region, crimeList);
 
-                }
-
-
-            } catch (IOException e) {
-                e.printStackTrace();
             }
 
-            this.statisticHashList = hashList;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        this.statisticHashList = hashList;
 
 
     }
@@ -217,11 +260,11 @@ public class FeedDAO implements Runnable {
 
     public LinkedList<Crime> getRegionStatistics(String region) {
 
-        if(region.equals("hela-sverige")) {
+        if (region.equals("hela-sverige")) {
             Iterator it = statisticHashList.entrySet().iterator();
             LinkedList<Crime> crimeList = new LinkedList<>();
             while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry)it.next();
+                Map.Entry pair = (Map.Entry) it.next();
                 LinkedList<Crime> crime = new LinkedList<>();
                 crime = (LinkedList<Crime>) pair.getValue();
                 crimeList.add(crime.get(0));

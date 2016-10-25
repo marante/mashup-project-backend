@@ -11,7 +11,7 @@ import static spark.Spark.*;
  * Created by kemkoi on 10/25/16.
  */
 public class Server {
-    
+
     public static void main(String[] args) {
         Gson gson = new Gson();
         port(8080);

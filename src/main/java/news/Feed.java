@@ -5,11 +5,14 @@ package news;
  */
 public class Feed {
 
-    private String title;
+    private String crimeType;
     private String link;
     private String description;
     private String guid;
     private String pubDate;
+    private String location;
+    private String crimeDate;
+    private String crimeAddress;
     private boolean isPermalink;
 
     public boolean isPermalink() {
@@ -20,12 +23,36 @@ public class Feed {
         isPermalink = permalink;
     }
 
-    public String getTitle() {
-        return title;
+    public String getCrimeAddress() {
+        return crimeAddress;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setCrimeAddress(String crimeAddress) {
+        this.crimeAddress = crimeAddress;
+    }
+
+    public String getLocation() {
+        return this.location;
+    }
+
+    public String getCrimeDate() {
+        return crimeDate;
+    }
+
+    public void setCrimeDate(String crimeDate) {
+        this.crimeDate = crimeDate;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getCrimeType() {
+        return crimeType;
+    }
+
+    public void setCrimeType(String crimeType) {
+        this.crimeType = crimeType;
     }
 
     public String getLink() {
@@ -62,7 +89,7 @@ public class Feed {
 
     public String toString() {
 
-        return "Titel: " + getTitle() + "\n" +
+        return "Titel: " + getCrimeType() + "\n" +
                 "Link: " + getLink() + "\n" +
                 "Description: " + getDescription() + "\n" +
                 "GUID: " + getGuid() + "\n" +
