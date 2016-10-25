@@ -7,8 +7,11 @@ import java.util.LinkedList;
 
 import static spark.Spark.*;
 
-public class Main {
-
+/**
+ * Created by kemkoi on 10/25/16.
+ */
+public class Server {
+    
     public static void main(String[] args) {
         Gson gson = new Gson();
         port(8080);
@@ -29,7 +32,6 @@ public class Main {
             return response.body();
         });
 
-        //IGNORE THIS, NOT IMPLEMENTED
         // Get crimes for specific region
         get("/brott/:region", (request, response) -> {
             LinkedList<Crime> crimeList = feedDao.getRegionStatistics(request.params(":region"));
