@@ -21,6 +21,10 @@ public class Crime {
         return region;
     }
 
+    public void addNumberToRegion(int number) {
+        this.region = (number + 1) + " " + this.region;
+    }
+
     public void setRegion(String region) {
         this.region = region;
     }

@@ -228,7 +228,7 @@ public class FeedDAO implements Runnable {
                 formattedCPC = df.format(crimePerCapita);
 
                 crime = new Crime();
-                crime.setRegion(region);
+                crime.setRegion(region.substring(0, 1).toUpperCase() + region.substring(1));
                 crime.setPopulation(population);
                 crime.setCrimePerCapita(formattedCPC);
 
@@ -276,8 +276,14 @@ public class FeedDAO implements Runnable {
                 crime = (LinkedList<Crime>) pair.getValue();
                 crimeList.add(crime.get(0));
             }
+            LinkedList<Crime> sortedCrimeList;
+            sortedCrimeList = sortCrimes(crimeList);
 
-            return crimeList;
+            for(int i = 0; i < sortedCrimeList.size(); i++) {
+                sortedCrimeList.get(i).addNumberToRegion(i);
+            }
+
+            return sortedCrimeList;
         }
 
         return (LinkedList<Crime>) this.statisticHashList.get(region);
@@ -287,5 +293,22 @@ public class FeedDAO implements Runnable {
         LinkedList<Feed> feedList;
         feedList = (LinkedList<Feed>) this.hashList.get(region);
         return feedList.size();
+    }
+
+    private LinkedList<Crime> sortCrimes(LinkedList<Crime> crimeList) {
+        Collections.sort(crimeList, new Comparator<Crime>(){
+            @Override
+            public int compare(Crime o1, Crime o2){
+                if(Double.parseDouble(o1.getCrimePerCapita()) > Double.parseDouble(o2.getCrimePerCapita())){
+                    return -1;
+                }
+                if(Double.parseDouble(o1.getCrimePerCapita()) < Double.parseDouble(o2.getCrimePerCapita())){
+                    return 1;
+                }
+                return 0;
+            }
+        });
+
+        return crimeList;
     }
 }
