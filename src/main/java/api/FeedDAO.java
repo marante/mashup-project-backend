@@ -32,6 +32,7 @@ public class FeedDAO implements Runnable {
     private Thread thread;
     private HashMap hashList;
     private HashMap statisticHashList;
+    private boolean numberAdded = false;
 
     @Override
     public void run() {
@@ -39,6 +40,7 @@ public class FeedDAO implements Runnable {
             try {
                 //Reset the hash map and give it the new values.
                 System.out.println("Updating values...");
+                numberAdded = false;
                 getFeedElements();
                 getCrimeElements();
 
@@ -279,8 +281,11 @@ public class FeedDAO implements Runnable {
             LinkedList<Crime> sortedCrimeList;
             sortedCrimeList = sortCrimes(crimeList);
 
-            for(int i = 0; i < sortedCrimeList.size(); i++) {
-                sortedCrimeList.get(i).addNumberToRegion(i);
+            if(numberAdded == false) {
+                numberAdded = true;
+                for(int i = 0; i < sortedCrimeList.size(); i++) {
+                    sortedCrimeList.get(i).addNumberToRegion(i);
+                }
             }
 
             return sortedCrimeList;

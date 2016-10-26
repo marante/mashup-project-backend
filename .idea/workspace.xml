@@ -40,21 +40,23 @@
       <file leaf-file-name="FeedDAO.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/api/FeedDAO.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-8.037037">
-              <caret line="282" column="60" selection-start-line="282" selection-start-column="60" selection-end-line="282" selection-end-column="60" />
+            <state vertical-scroll-proportion="-4.4444447">
+              <caret line="284" column="29" selection-start-line="284" selection-start-column="29" selection-end-line="284" selection-end-column="29" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#9309#9310#0" expanded="true" />
-                <element signature="e#9376#9377#0" expanded="true" />
+                <element signature="e#9291#9292#0" expanded="true" />
+                <element signature="e#9327#9328#0" expanded="true" />
+                <element signature="e#9387#9388#0" expanded="true" />
+                <element signature="e#9454#9455#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Crime.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Crime.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/statistics/Crime.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.50440526">
+            <state vertical-scroll-proportion="0.0">
               <caret line="24" column="39" selection-start-line="24" selection-start-column="39" selection-end-line="24" selection-end-column="39" />
               <folding>
                 <element signature="e#219#220#0" expanded="true" />
@@ -82,11 +84,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Server.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Server.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/Server.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="29" column="49" selection-start-line="29" selection-start-column="49" selection-end-line="29" selection-end-column="49" />
+            <state vertical-scroll-proportion="0.40528634">
+              <caret line="32" column="11" selection-start-line="32" selection-start-column="11" selection-end-line="32" selection-end-column="11" />
               <folding />
             </state>
           </provider>
@@ -137,8 +139,8 @@
         <option value="$PROJECT_DIR$/src/main/java/Server.java" />
         <option value="$PROJECT_DIR$/src/main/java/api/Feed.java" />
         <option value="$PROJECT_DIR$/src/main/java/news/Feed.java" />
-        <option value="$PROJECT_DIR$/src/main/java/api/FeedDAO.java" />
         <option value="$PROJECT_DIR$/src/main/java/statistics/Crime.java" />
+        <option value="$PROJECT_DIR$/src/main/java/api/FeedDAO.java" />
       </list>
     </option>
   </component>
@@ -691,12 +693,12 @@
       <workItem from="1477325974965" duration="8055000" />
       <workItem from="1477383084920" duration="15165000" />
       <workItem from="1477424507707" duration="1228000" />
-      <workItem from="1477481994205" duration="2666000" />
+      <workItem from="1477481994205" duration="3050000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="44446000" />
+    <option name="totallyTimeSpent" value="44830000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -776,8 +778,10 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#9309#9310#0" expanded="true" />
-            <element signature="e#9376#9377#0" expanded="true" />
+            <element signature="e#9291#9292#0" expanded="true" />
+            <element signature="e#9327#9328#0" expanded="true" />
+            <element signature="e#9387#9388#0" expanded="true" />
+            <element signature="e#9454#9455#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -952,18 +956,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/api/FeedDAO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.037037">
-          <caret line="282" column="60" selection-start-line="282" selection-start-column="60" selection-end-line="282" selection-end-column="60" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#9309#9310#0" expanded="true" />
-            <element signature="e#9376#9377#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/statistics/StatisticRegions.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -980,17 +972,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Server.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="29" column="49" selection-start-line="29" selection-start-column="49" selection-end-line="29" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/statistics/Crime.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.50440526">
+        <state vertical-scroll-proportion="0.0">
           <caret line="24" column="39" selection-start-line="24" selection-start-column="39" selection-end-line="24" selection-end-column="39" />
           <folding>
             <element signature="e#219#220#0" expanded="true" />
@@ -1004,6 +988,28 @@
             <element signature="e#585#586#0" expanded="true" />
             <element signature="e#621#622#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/api/FeedDAO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.4444447">
+          <caret line="284" column="29" selection-start-line="284" selection-start-column="29" selection-end-line="284" selection-end-column="29" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#9291#9292#0" expanded="true" />
+            <element signature="e#9327#9328#0" expanded="true" />
+            <element signature="e#9387#9388#0" expanded="true" />
+            <element signature="e#9454#9455#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Server.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.40528634">
+          <caret line="32" column="11" selection-start-line="32" selection-start-column="11" selection-end-line="32" selection-end-column="11" />
+          <folding />
         </state>
       </provider>
     </entry>
