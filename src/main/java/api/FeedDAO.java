@@ -98,7 +98,7 @@ public class FeedDAO implements Runnable {
                     //Om det inte är ett brott utan endast ett meddelande till användarna angående deras RSS flöde.
                     boolean junkFound = false;
                     for(int i = 0; i < parts.length; i++) {
-                        if(parts[i].equals(" Övrigt") || parts[i].contains("Sammanfattning") ) {
+                        if(parts[i].contains("Övrigt") || parts[i].contains("Sammanfattning") ) {
                             junkFound = true;
                         }
                     }
@@ -129,14 +129,35 @@ public class FeedDAO implements Runnable {
                         feed.setCrimeDate(parts[0]);
                     }
 
-                    if(description.contains("\n") && !description.substring(Math.max(description.length() - 4, 0)).contains("\n")) {
-                        String[] descriptionParts = description.split(".\n");
-                        try {
-                            String address = descriptionParts[0];
-                            description = descriptionParts[1];
+                    //Dela upp description i description och address för olika regioner.
+                    if(pair.getKey().equals("stockholm")) {
+                        if(description.contains("\n") && !description.substring(Math.max(description.length() - 4, 0)).contains("\n")) {
+                            String[] descriptionParts = description.split(".\n");
+                            try {
+                                String address = descriptionParts[0];
+                                description = descriptionParts[1];
+                                feed.setCrimeAddress(address);
+                            } catch(ArrayIndexOutOfBoundsException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    } else if(pair.getKey().equals("skane")) {
+                        if(description.contains(",")) {
+                            String descriptionParts[] = description.split(", ");
+                            String address = "";
+                            for(int i = 0; i < descriptionParts.length; i++) {
+                                if(i == 0) {
+                                    description = descriptionParts[i];
+                                } else {
+                                    if(i + 1 == descriptionParts.length) {
+
+                                    address += descriptionParts[i];
+                                    } else {
+                                        address += descriptionParts[i] + ", ";
+                                    }
+                                }
+                            }
                             feed.setCrimeAddress(address);
-                        } catch(ArrayIndexOutOfBoundsException e) {
-                            e.printStackTrace();
                         }
                     }
 
