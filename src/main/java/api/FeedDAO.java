@@ -70,6 +70,7 @@ public class FeedDAO implements Runnable {
         HashMap regionMap = regions.getRegionMap();
         LinkedList<Feed> feedList;
         HashMap hashList = new HashMap();
+        int number = 0;
 
         Iterator it = regionMap.entrySet().iterator();
         while (it.hasNext()) {
@@ -165,6 +166,8 @@ public class FeedDAO implements Runnable {
                     feed.setDescription(description);
                     feed.setGuid(eElement.getElementsByTagName("guid").item(0).getTextContent());
                     feed.setPubDate(eElement.getElementsByTagName("pubDate").item(0).getTextContent());
+                    feed.setCrimeNumber(number);
+                    number++;
 
                     feedList.add(feed);
                 }
@@ -177,6 +180,7 @@ public class FeedDAO implements Runnable {
             it.remove(); //To avoid ConcurrentModificationException - Dunno om detta är nödvändigt, lösning från stackoverflow.
         }
 
+        number = 0;
         resetHashList();
         this.hashList = hashList;
     }

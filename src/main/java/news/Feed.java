@@ -13,6 +13,7 @@ public class Feed {
     private String location;
     private String crimeDate;
     private String crimeAddress;
+    private int crimeNumber;
     private boolean isPermalink;
 
     public boolean isPermalink() {
@@ -25,6 +26,14 @@ public class Feed {
 
     public String getCrimeAddress() {
         return crimeAddress;
+    }
+
+    public int getCrimeNumber() {
+        return crimeNumber;
+    }
+
+    public void setCrimeNumber(int crimeNumber) {
+        this.crimeNumber = crimeNumber;
     }
 
     public void setCrimeAddress(String crimeAddress) {
