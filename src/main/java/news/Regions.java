@@ -3,12 +3,15 @@ package news;
 import java.util.HashMap;
 
 /**
- * Created by Victor on 2016-10-14.
+ * Class som håller reda på alla regioner och deras länkar till polisens RSS-feed.
  */
 public class Regions {
 
     private HashMap regionMap = new HashMap();
 
+    /**
+     * Constructor som sätter in alla värdena som behövs i regionMap.
+     */
     public Regions() {
 
         regionMap.put("hela-sverige", "https://polisen.se/Aktuellt/Handelser/Handelser-i-hela-landet/?feed=rss");
@@ -35,11 +38,10 @@ public class Regions {
         regionMap.put("ostergotland", "https://polisen.se/Aktuellt/RSS/Lokal-RSS---Handelser/Lokala-RSS-listor1/Handelser-RSS---Ostergotland/?feed=rss");
     }
 
-    public String fetchRegion (String region) {
-
-        return (String) regionMap.get(region);
-    }
-
+    /**
+     * Metod som skickar tillbaka regionmapen.
+     * @return regionmapen som skickas tillbaka.
+     */
     public HashMap getRegionMap() {
         return this.regionMap;
     }

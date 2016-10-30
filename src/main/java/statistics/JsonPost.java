@@ -1,7 +1,8 @@
 package statistics;
 
 /**
- * Created by kemkoi on 10/25/16.
+ * Class som håller JSON-post informationen som används för att få tillbaka information från
+ * statistiska centralbyrån.
  */
 public class JsonPost {
 
@@ -68,6 +69,10 @@ public class JsonPost {
             "}";
 
 
+    /**
+     * Metod som skickar tillbaka JSON-POST texten som ska användas.
+     * @return skickar tillbaka JSON-POST strängen.
+     */
     public String getJsonText() {
         return this.jsonText;
     }

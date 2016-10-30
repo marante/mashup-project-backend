@@ -8,7 +8,9 @@ import java.util.LinkedList;
 import static spark.Spark.*;
 
 /**
- * Created by kemkoi on 10/25/16.
+ * Class som håller reda på alla GET metoder som finns i servern och som kan kallas på.
+ * Denna classen startar även tråden för FeedDAO vilket gör att den börjar hämta information från
+ * APIerna direkt.
  */
 public class Server {
 
@@ -18,11 +20,12 @@ public class Server {
         FeedDAO feedDao = new FeedDAO();
         feedDao.start();
 
-        // Get method for index page.
+        // Get metod för att se att servern fungerar.
         get("/", (req, res) -> "Working");
 
 
-        // Get method for a specific region
+        // Get metod för att få tillbaka alla brott i en specifik region eller hela Sverige.
+        //Hela Sverige = 'hela-sverige'
         get("/feed/:region", (request, response) -> {
 
             LinkedList<Feed> feedList = feedDao.getRegionFeed(request.params(":region"));
@@ -32,7 +35,8 @@ public class Server {
             return response.body();
         });
 
-        // Get crimes for specific region
+        // Get metod för att få tillbaka statistik för en specifik region eller hela Sverige.
+        //Hela Sverige = 'hela-sverige'
         get("/brott/:region", (request, response) -> {
             LinkedList<Crime> crimeList = feedDao.getRegionStatistics(request.params(":region"));
             response.header("Content-Type", "application/json charset=UTF-8\",\"*/*;charset=UTF-8");
